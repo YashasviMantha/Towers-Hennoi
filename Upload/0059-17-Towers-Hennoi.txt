@@ -1,0 +1,440 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Simulation_p.TOH;
+import Rules_p.Rules_p;
+import Credits_p.Credits_p;
+
+public class Open_main implements ActionListener
+{
+    JFrame MenuFrame = new JFrame("Menu - Towers Of Hennoi");
+    JFrame TestF = new JFrame("This is a test!");
+    JFrame RulesFrame = new JFrame("Rules - Towers Of Hennoi");
+    JFrame Simulation = new JFrame("Simulation - Towers Of Hennoi");
+    Open_main()
+    {
+            Menu();
+    }
+
+    public static void main(String Args[])
+
+    {
+        new Open_main();
+//        TOH TOH_F = new TOH();
+    }
+
+
+    public void Menu()
+    {
+        MenuFrame.setSize(500, 800);
+        GridBagLayout layout = new GridBagLayout();
+        MenuFrame.setLayout(layout);
+        MenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        MenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+//        Button 1 Start Simulation
+        JButton B1 = new JButton("Start Simulation!");
+        B1.setToolTipText("Click to start simulation!");
+        B1.setPreferredSize(new Dimension(300, 60));
+        B1.setFont(new Font("Arial", Font.PLAIN, 28));
+        B1.setActionCommand("ST_SIM");
+        B1.addActionListener(this);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        MenuFrame.add(B1, gbc);
+
+//        Button 2 Rules
+        JButton B2 = new JButton("Rules");
+        B2.setToolTipText("Click to understand the rules!");
+        B2.setFont(new Font("Arial", Font.PLAIN, 28));
+        B2.setPreferredSize(new Dimension(300, 60));
+        B2.setActionCommand("RULES");
+        B2.addActionListener(this);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        MenuFrame.add(B2, gbc);
+
+//        Button 3 Credits
+        JButton B3 = new JButton("Credits");
+        B3.setToolTipText("Click for Credits!");
+        B3.setFont(new Font("Arial", Font.PLAIN, 28));
+        B3.setPreferredSize(new Dimension(300, 60));
+        B3.setActionCommand("Credits");
+        B3.addActionListener(this);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        MenuFrame.add(B3, gbc);
+
+
+        //MenuFrame.pack();                                   //Packes the size of the frame just so that all the buttons fit.
+        MenuFrame.setLocationRelativeTo(null);                //Places the frame to the middle of the screen
+        MenuFrame.setVisible(true);
+        //MenuFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+//    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        new TOH();
+    }
+    void TestFrame()
+    {
+        TestF.setSize(500, 800);
+        TestF.setVisible(true);
+        TestF.setLocationRelativeTo(null);
+    }
+
+
+    //    @Override
+    public void actionPerformed(ActionEvent AE)
+    {
+        System.out.println("Called");
+        String Action = AE.getActionCommand();
+        if (Action.equals("RULES"))
+        {
+            MenuFrame.setVisible(false);
+            Simulation.setVisible(false);
+            new Rules_p();
+        }
+
+        if (Action.equals("ST_SIM"))
+        {
+            MenuFrame.setVisible(false);
+            RulesFrame.setVisible(false);
+//            Simulation.setVisible(true);
+//            Simulation_FUNC();
+            new TOH();
+//            SIM = true;
+        }
+        if (Action.equals("Credits"))
+        {
+            MenuFrame.setVisible(false);
+            RulesFrame.setVisible(false);
+//            Simulation.setVisible(true);
+//            Simulation_FUNC();
+            new Credits_p();
+//            SIM = true;
+        }
+    }
+}
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+package Rules_p;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+
+public class Rules_p extends JFrame
+{
+    public BufferedImage image;
+    public Rules_p()
+    {
+        setSize(1200, 1000);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        try {
+            image = ImageIO.read(new File("Rules.png"));
+        } catch (IOException ex) {
+            System.out.println("IMAGE ");
+        }
+//        image = ImageIO.read(new File("Rules.png"));
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        String Rules_Message_1 = "The goal of the puzzle is to move all the disks from the leftmost peg to the rightmost peg, adhering to the following rules:\n";
+        String Rules_Message_2 = "1. Move only one disk at a time.\n";
+        String Rules_Message_3 = "2. A larger disk may not be placed ontop of a smaller disk.";
+        String Rules_Message_4 = "3. All disks, except the one being moved, must be on a peg.";
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString(Rules_Message_1,15,60);
+        g.drawString(Rules_Message_2,40,100);
+        g.drawString(Rules_Message_3,40,130);
+        g.drawString(Rules_Message_4,40,160);
+        g.drawString("Pictorial Representation:-",400,200);
+        g.drawImage(image,400,220,this);
+
+    }
+
+    public static void main(String[] ARGS)
+    {
+        new Rules_p();
+    }
+
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+package Simulation_p;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
+
+public class TOH extends JFrame implements MouseListener{
+
+//        JFrame Paper = new JFrame("SIM");
+        boolean Dragging_1 = false, Dragging_2 = false, Dragging_3 = false;
+        int MouseX = 115,MouseY = 750;
+        int curX = 100,curY = 50;
+        int flag = 0;
+
+        int Limit_Rect_1[] = {90,760,150,30};
+        int Limit_Rect_2[] = {100,710,125,30};
+        int Limit_Rect_3[] = {110,660,100,30};
+       public TOH()
+        {
+
+            setSize(800, 800);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            setVisible(true);
+            addMouseListener(this);
+
+        }
+
+//    public void mousePressed(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mouseClicked(MouseEvent e){ }
+    public void mouseExited(MouseEvent e){}
+    public void mousePressed(MouseEvent e) {
+//        System.out.println( "Clicked");
+        int CurrentMouseX = e.getX();
+        int CurrentMouseY = e.getY();
+        System.out.println("Clicked - "+MouseX+"  "+MouseY);
+        if(CurrentMouseX>=Limit_Rect_1[0] && CurrentMouseY>=Limit_Rect_1[1] && CurrentMouseX<(Limit_Rect_1[0]+80) && CurrentMouseY<Limit_Rect_1[1]+50)
+        {
+            System.out.println("Dragging_1 is true now");
+            Dragging_1 = true;
+        }
+        if(CurrentMouseX>=Limit_Rect_2[0] && CurrentMouseY>=Limit_Rect_2[1] && CurrentMouseX<(Limit_Rect_2[0]+80) && CurrentMouseY<Limit_Rect_2[1]+50)
+        {
+            System.out.println("Dragging_2 is true now");
+            Dragging_2 = true;
+        }
+        if(CurrentMouseX>=Limit_Rect_3[0] && CurrentMouseY>=Limit_Rect_3[1] && CurrentMouseX<(Limit_Rect_3[0]+80) && CurrentMouseY<Limit_Rect_3[1]+50)
+        {
+            System.out.println("Dragging_3 is true now");
+            Dragging_3 = true;
+        }
+    }
+
+    public void mouseReleased(MouseEvent e)
+    {
+        MouseX = e.getX();
+        MouseY = e.getY();
+        repaint();
+//        Dragging = false;
+//        System.out.println("Unclicked");
+    }
+
+
+
+//    @Override
+
+
+        public void paint(Graphics g)
+        {
+            super.paint(g);
+
+
+//            if(MouseX>Limit_Rect[0] && MouseY>Limit_Rect[1] && MouseX<(Limit_Rect[0]+80) && MouseY<(Limit_Rect[1]+50))
+            if(Dragging_1)
+            {
+//                System.out.println("Called");
+                g.setColor(Color.green);
+//                if(MouseX>120 && MouseX<200)
+//                {
+                    g.fillRect(MouseX, MouseY, 150, 30);
+                    System.out.println(MouseX + "  " + MouseY);
+                    Limit_Rect_1[0] = MouseX;
+                    Limit_Rect_1[1] = MouseY;
+                    Dragging_1 = false;
+//                }
+            }
+            if(Dragging_2)
+            {
+//                System.out.println("Called");
+                g.setColor(Color.blue);
+                g.fillRect(MouseX,MouseY,125,30);
+                System.out.println(MouseX + "  " +MouseY );
+                Limit_Rect_2[0] = MouseX;
+                Limit_Rect_2[1] = MouseY;
+                Dragging_2 = false;
+            }
+            if(Dragging_3)
+            {
+//                System.out.println("Called");
+                g.setColor(Color.blue);
+                g.fillRect(MouseX,MouseY,100,30);
+                System.out.println(MouseX + "  " +MouseY );
+                Limit_Rect_3[0] = MouseX;
+                Limit_Rect_3[1] = MouseY;
+                Dragging_3 = false;
+            }
+            g.setColor(Color.black);
+            g.fillRect(150,300,25,500); // Thresh = 135,190
+            g.fillRect(385,300,25,500);
+            g.fillRect(610,300,25,500);
+
+//            g.fillRect(115,750,100,50);
+            if(!Dragging_1 || !Dragging_2 || !Dragging_3)
+            {
+                g.setColor(Color.green);
+                g.fillRect(Limit_Rect_1[0],Limit_Rect_1[1],Limit_Rect_1[2],Limit_Rect_1[3]);
+                g.setColor(Color.blue);
+                g.fillRect(Limit_Rect_2[0],Limit_Rect_2[1],Limit_Rect_2[2],Limit_Rect_2[3]);
+                g.setColor(Color.red);
+                g.fillRect(Limit_Rect_3[0],Limit_Rect_3[1],Limit_Rect_3[2],Limit_Rect_3[3]);
+                flag = 1;
+            }
+        }
+
+    public static void main(String Main[])
+    {
+        TOH test = new TOH();
+    }
+
+}
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+package Credits_p;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URI;
+//import java.net.URIConnection;
+
+
+public class Credits_p extends JFrame implements ActionListener
+{
+    public Credits_p()
+    {
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GridBagLayout layout = new GridBagLayout();
+        setLayout(layout);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton TW = new JButton("Chess");
+        TW.setToolTipText("Click to open Chess handle");
+        TW.setPreferredSize(new Dimension(300, 60));
+        TW.setFont(new Font("Arial", Font.PLAIN, 28));
+        TW.setActionCommand("CH");
+        TW.addActionListener(this);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        add(TW,gbc);
+
+
+        JButton GT = new JButton("Github");
+        GT.setToolTipText("Click to open Github handle");
+        GT.setPreferredSize(new Dimension(300, 60));
+        GT.setFont(new Font("Arial", Font.PLAIN, 28));
+        GT.setActionCommand("GT");
+        GT.addActionListener(this);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        add(GT,gbc);
+
+        JButton LD = new JButton("LinkedIN ");
+        LD.setToolTipText("Click to open LinkiedIN handle");
+        LD.setPreferredSize(new Dimension(300, 60));
+        LD.setFont(new Font("Arial", Font.PLAIN, 28));
+        LD.setActionCommand("LD");
+        LD.addActionListener(this);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        add(LD,gbc);
+
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent AE)
+    {
+        System.out.println("Called");
+        String Action = AE.getActionCommand();
+        if (Action.equals("CH")) {
+            try {
+                Desktop desktop = java.awt.Desktop.getDesktop();
+                URI oURI = new URI("https://www.chess.com/member/dump7");
+                desktop.browse(oURI);
+            } catch (Exception e) {
+                System.out.println("Exe");
+            }
+        }
+
+        if (Action.equals("GT"))
+        {
+            try {
+                Desktop desktop = java.awt.Desktop.getDesktop();
+                URI oURI = new URI("https://github.com/YashasviMantha/Towers-Hennoi");
+                desktop.browse(oURI);
+            } catch (Exception e) {
+                System.out.println("Exe");
+            }
+        }
+        if (Action.equals("LT"))
+        {
+            try {
+                Desktop desktop = java.awt.Desktop.getDesktop();
+                URI oURI = new URI("https://www.linkedin.com/in/yashasvi-mantha-2b964616b/");
+                desktop.browse(oURI);
+            } catch (Exception e) {
+                System.out.println("Exe");
+            }
+        }
+    }
+
+    public static void main(String[] ARGS)
+    {
+        new Credits_p();
+    }
+
+}
+
+
+
+
+
+
+
+
