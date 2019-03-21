@@ -3,6 +3,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import Simulation_p.TOH;
+import Rules_p.Rules_p;
+import Credits_p.Credits_p;
 
 public class Open_main implements ActionListener
 {
@@ -12,12 +15,14 @@ public class Open_main implements ActionListener
     JFrame Simulation = new JFrame("Simulation - Towers Of Hennoi");
     Open_main()
     {
-        Menu();
+            Menu();
     }
 
     public static void main(String Args[])
+
     {
         new Open_main();
+//        TOH TOH_F = new TOH();
     }
 
 
@@ -26,6 +31,8 @@ public class Open_main implements ActionListener
         MenuFrame.setSize(500, 800);
         GridBagLayout layout = new GridBagLayout();
         MenuFrame.setLayout(layout);
+        MenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -57,6 +64,7 @@ public class Open_main implements ActionListener
         B3.setToolTipText("Click for Credits!");
         B3.setFont(new Font("Arial", Font.PLAIN, 28));
         B3.setPreferredSize(new Dimension(300, 60));
+        B3.setActionCommand("Credits");
         B3.addActionListener(this);
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -76,32 +84,6 @@ public class Open_main implements ActionListener
         TestF.setLocationRelativeTo(null);
     }
 
-    void RulesFrame()
-    {
-
-        String Rules_Message_1 = "The goal of the puzzle is to move all the disks from the leftmost peg to the rightmost peg, adhering to the following rules:\n";
-        String Rules_Message_2 = "1. Move only one disk at a time.\n";
-        String Rules_Message_3 = "2. A larger disk may not be placed ontop of a smaller disk.";
-        String Rules_Message_4 = "3. All disks, except the one being moved, must be on a peg.";
-
-        JTextField T1 = new JTextField(Rules_Message_1,5);
-        RulesFrame.add(T1);
-
-        RulesFrame.setSize(500, 800);
-        RulesFrame.setVisible(true);
-        RulesFrame.setLocationRelativeTo(null);
-    }
-
-    void Simulation_FUNC()
-    {
-        Simulation.setSize(800,800);
-
-
-
-        Simulation.setLocationRelativeTo(null);                //Places the frame to the middle of the screen
-        Simulation.setVisible(true);
-
-    }
 
     //    @Override
     public void actionPerformed(ActionEvent AE)
@@ -112,7 +94,7 @@ public class Open_main implements ActionListener
         {
             MenuFrame.setVisible(false);
             Simulation.setVisible(false);
-            RulesFrame();
+            new Rules_p();
         }
 
         if (Action.equals("ST_SIM"))
@@ -120,7 +102,18 @@ public class Open_main implements ActionListener
             MenuFrame.setVisible(false);
             RulesFrame.setVisible(false);
 //            Simulation.setVisible(true);
-            Simulation_FUNC();
+//            Simulation_FUNC();
+            new TOH();
+//            SIM = true;
+        }
+        if (Action.equals("Credits"))
+        {
+            MenuFrame.setVisible(false);
+            RulesFrame.setVisible(false);
+//            Simulation.setVisible(true);
+//            Simulation_FUNC();
+            new Credits_p();
+//            SIM = true;
         }
     }
 }
